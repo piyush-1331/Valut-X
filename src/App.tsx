@@ -126,16 +126,23 @@ export default function App() {
         console.log("VaultX: Connected to Network:", network.name, "(Chain ID:", network.chainId.toString(), ")");
       }
 
-      const data = await contract.getEntries();
+      const data: any = await contract.getEntries();
       console.log("VaultX: Raw data from contract:", data);
 
-      if (!data || !Array.isArray(data)) {
-        console.warn("VaultX: Received invalid data format from contract.");
+      // Ethers v6 often returns an array-like "Result" rather than a plain JS array.
+      // Convert to a real array so mapping/rendering works reliably.
+      const list = !data
+        ? []
+        : Array.isArray(data)
+          ? data
+          : Array.from(data as Iterable<any>);
+
+      if (!list || list.length === 0) {
         setEntries([]);
         return;
       }
 
-      const formattedEntries: PasswordEntry[] = data.map((entry: any, index: number) => {
+      const formattedEntries: PasswordEntry[] = list.map((entry: any, index: number) => {
         // Ethers might return data as an array-like object with both keys and indices
         // We use positional fallback for maximum compatibility
         return {
@@ -147,7 +154,7 @@ export default function App() {
         };
       });
       
-      setEntries(formattedEntries.reverse());
+      setEntries([...formattedEntries].reverse());
       console.log("VaultX: Successfully processed", formattedEntries.length, "blockchain entries.");
     } catch (error: any) {
       console.error("VaultX Fetch Error:", error);
@@ -516,7 +523,7 @@ export default function App() {
               <AnimatePresence>
                 {entries.map((entry) => (
                   <motion.div 
-                    key={entry.timestamp}
+                    key={`${entry.index}-${entry.timestamp}`}
                     layout
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
