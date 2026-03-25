@@ -1,0 +1,5 @@
+{
+  "name": "VaultX - Decentralized Password Vault",
+  "description": "A secure, minimal decentralized password manager using blockchain and client-side encryption.",
+  "requestFramePermissions": []
+}

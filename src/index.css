@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #050505;
+  --color-card: rgba(20, 20, 20, 0.6);
+  --color-accent: #00ffcc;
+  --color-accent-hover: #00e6b8;
+  --color-border: rgba(255, 255, 255, 0.1);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-white antialiased selection:bg-accent/30;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-card backdrop-blur-xl border border-border rounded-2xl;
+  }
+  
+  .glass-hover {
+    @apply transition-all duration-300 hover:border-accent/30 hover:bg-white/[0.05];
+  }
+
+  .neon-glow {
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+  }
+
+  .neon-text {
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+  }
+}
